@@ -56,17 +56,6 @@ st.markdown("""
             border: 1px solid #f39c12;
             box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
         }
-        # .game-title {
-        #     font-size: 2.5rem !important;
-        #     text-align: center;
-        #     margin-bottom: 1.5rem;
-        #     color: #f39c12;
-        #     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        #     background: linear-gradient(to right, #4CAF50, #2196F3);
-        #     -webkit-background-clip: text;
-        #     -webkit-text-fill-color: transparent;
-        #     padding: 0.5rem;
-        # }
         .sidebar-title {
             font-size: 1.8rem !important;
             text-align: center;
@@ -94,11 +83,34 @@ st.markdown("""
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         .dev-info {
-            background: #2c3e50;
-            color: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 2rem;
+        text-align: center;
+        }
+        .dev-info h2 {
+            margin-bottom: 1rem;
+        }
+        .dev-description {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        .dev-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .dev-label {
+            color: #f39c12;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        .dev-value {
+            font-size: 1rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -107,19 +119,29 @@ st.markdown("""
 with st.sidebar:
     st.markdown('<p class="sidebar-title">🎮 GAME CENTER</p>', unsafe_allow_html=True)
     
-    app_mode = st.radio(
-        "CHOOSE YOUR GAME",
-        [
-            "📊 Dashboard", 
-            "🔢 Tebak Angka", 
-            "💬 Tebak Kata", 
-            "✂️ Gunting-Batu-Kertas", 
-            "🏆 Leaderboard"
-        ],
+    # Main navigation options
+    main_options = ["📊 Dashboard", "🎮 Games", "🏆 Leaderboard"]
+    main_choice = st.radio(
+        "MENU UTAMA",
+        main_options,
         index=0,
-        key="nav_radio"
+        key="main_nav"
     )
-
+    
+    # Sub-menu for Games
+    if main_choice == "🎮 Games":
+        app_mode = st.radio(
+            "PILIH PERMAINAN",
+            [
+                "🔢 Tebak Angka", 
+                "💬 Tebak Kata", 
+                "✂️ Gunting-Batu-Kertas"
+            ],
+            index=0,
+            key="game_nav"
+        )
+    else:
+        app_mode = main_choice
 
 # Show welcome and info only on Dashboard
 if "Dashboard" in app_mode:
@@ -134,8 +156,6 @@ if "Dashboard" in app_mode:
         </div>
         """, unsafe_allow_html=True)
     
-    # Game information section
-    st.subheader("🎮 Daftar Permainan")
     
     col1, col2 = st.columns(2)
     
@@ -176,23 +196,18 @@ if "Dashboard" in app_mode:
     # Developer information
     st.markdown("""
     <div class="dev-info">
-        <h2 style="color: white; text-align: center;">👨‍💻 Tentang Developer</h2>
-        <p style="text-align: center;">Game Center dikembangkan oleh tim pengembang yang bersemangat dalam menciptakan pengalaman bermain game yang menyenangkan dan interaktif.</p>
-        
-        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
-            <div style="text-align: center;">
-                <p><strong>Versi Aplikasi</strong></p>
-                <p>1.0.0</p>
-            </div>
-            <div style="text-align: center;">
-                <p><strong>Teknologi</strong></p>
-                <p>Python, Streamlit</p>
-            </div>
-            <div style="text-align: center;">
-                <p><strong>Kontak</strong></p>
-                <p>gamecenter@example.com</p>
-            </div>
-        </div>
+        <h2>👨‍💻 TENTANG PENGEMBANG</h2>
+        <p class="dev-description">
+            Aplikasi Game Center dikembangkan untuk memberikan pengalaman bermain game yang menyenangkan dan interaktif.
+        </p>
+        <p class="dev-label">VERSI APLIKASI</p>
+        <p class="dev-value">1.0.0</p>
+        <p class="dev-label">TEKNOLOGI</p>
+        <p class="dev-value">Python<br>Streamlit</p>
+        <p class="dev-label">KONTAK</p>
+        <p class="dev-value">gamecenter@example.com</p>
+        <p class="dev-label">PENGEMBANG</p>
+        <p class="dev-value">Tim Game Center</p>
     </div>
     """, unsafe_allow_html=True)
 
