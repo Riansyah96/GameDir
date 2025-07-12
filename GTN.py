@@ -112,7 +112,7 @@ def main():
     # =====================================
     # BAGIAN PENGATURAN
     # =====================================
-    st.title("🎮 Ultimate Number Guessing Challenge")
+    st.title("Game Tebak Angka")
     with st.expander("⚙️ Pengaturan Game", expanded=True):
         col_set1, col_set2 = st.columns(2)
         

@@ -12,23 +12,26 @@ def main():
 
     def simpan_hasil(nama, mode, kesulitan):
         """Menyimpan hasil permainan ke leaderboard"""
+        if not nama:  # Skip if no name provided
+            return
+            
         # Cek apakah sudah ada record dengan nama, mode, dan kesulitan yang sama
         ditemukan = False
         for record in st.session_state.leaderboard:
-            if (record['nama'] == nama and 
-                record['mode'] == mode and 
-                record['kesulitan'] == kesulitan):
+            if (record.get('nama') == nama and 
+                record.get('mode') == mode and 
+                record.get('kesulitan') == kesulitan):
                 # Update record yang sudah ada
-                record['skor_pemain'] += st.session_state.skor['pemain']
-                record['skor_komputer'] += st.session_state.skor['komputer']
-                record['total_seri'] += st.session_state.skor['seri']
-                record['total_ronde'] += st.session_state.ronde - 1
+                record['skor_pemain'] = record.get('skor_pemain', 0) + st.session_state.skor['pemain']
+                record['skor_komputer'] = record.get('skor_komputer', 0) + st.session_state.skor['komputer']
+                record['total_seri'] = record.get('total_seri', 0) + st.session_state.skor['seri']
+                record['total_ronde'] = record.get('total_ronde', 0) + (st.session_state.ronde - 1)
                 record['terakhir_diperbarui'] = time.strftime("%Y-%m-%d %H:%M:%S")
                 ditemukan = True
                 break
         
         if not ditemukan:
-            # Buat record baru
+            # Buat record baru dengan semua field yang diperlukan
             st.session_state.leaderboard.append({
                 'nama': nama,
                 'mode': mode,
@@ -43,7 +46,7 @@ def main():
         
         st.session_state.nama_tersimpan = nama
 
-    # Inisialisasi data penyimpanan
+    # Inisialisasi data penyimpanan dengan struktur yang benar
     if 'leaderboard' not in st.session_state:
         st.session_state.leaderboard = []
     if 'total_permainan' not in st.session_state:
@@ -298,15 +301,19 @@ def main():
         # Format data untuk ditampilkan
         leaderboard_display = []
         for record in st.session_state.leaderboard:
+            # Skip invalid records
+            if not record.get('nama'):
+                continue
+                
             leaderboard_display.append({
-                "Pemain": record['nama'],
-                "Mode": record['mode'],
-                "Kesulitan": record['kesulitan'],
-                "Menang": record['skor_pemain'],
-                "Kalah": record['skor_komputer'],
-                "Seri": record['total_seri'],
-                "Total Ronde": record['total_ronde'],
-                "Terakhir Diperbarui": record['terakhir_diperbarui']
+                "Pemain": record.get('nama', 'Unknown'),
+                "Mode": record.get('mode', 'Normal'),
+                "Kesulitan": record.get('kesulitan', 'Normal'),
+                "Menang": record.get('skor_pemain', 0),
+                "Kalah": record.get('skor_komputer', 0),
+                "Seri": record.get('total_seri', 0),
+                "Total Ronde": record.get('total_ronde', 0),
+                "Terakhir Diperbarui": record.get('terakhir_diperbarui', 'N/A')
             })
         
         # Urutkan berdasarkan jumlah kemenangan
